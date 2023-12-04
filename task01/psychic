@@ -1,0 +1,48 @@
+RED='\e[32m'
+GREEN='\e[31m'
+RESET='\e[0m'
+min=0
+rande=9
+declare -A numbers
+allowedNumbers=("0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "q")
+mathes=0
+misses=0
+for step in {1..10}; do
+        echo "Step $step"
+        hiddenNumber=$((RANDOM % 9 ))
+        read -p "Please enter number from 0 to 9 (q - quit): " input
+
+        while [[ ! ${allowedNumbers[*]} =~ "${input}" ]]
+                do
+                        read -p "Wrong input! Please enter number from 0 to 9 (q - quit): " input
+        done
+
+        if [[ "${input}" == "q"  ]]
+                then
+                        break
+        fi
+
+        if [[ "${input}" == "${hiddenNumber}" ]]
+                then
+                        echo "Hit! My number: ${hiddenNumber}"
+                        numbers+="${RED}${input} ${RESET}"
+                        (( matches+=1 ))
+                else
+                        echo "Miss! My number: ${hiddenNumber}"
+                        numbers+="${GREEN}${input} ${RESET}"
+                        (( misses+=1 ))
+        fi
+
+        (( matchesPercent=matches * 100 / step ))
+        (( missesPercent=misses * 100 / step ))
+        echo "Hit: ${matchesPercent}% Miss: ${missesPercent}%"
+        echo -e "Numbers: ${numbers[@]}"
+
+        sleep 2
+        clear
+done
+
+echo "Summary"
+echo "Hit: ${matchesPercent}% Miss: ${missesPercent}%"
+echo -e "Numbers: ${numbers[@]}"
+echo "Thanks for the game!"
